@@ -8,5 +8,5 @@ docs
 #VSCode files
 .vscode
 
-#Local
+#dotenv
 .env
