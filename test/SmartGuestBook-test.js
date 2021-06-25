@@ -10,13 +10,11 @@ describe('SmartGuestBook', function () {
 
   beforeEach(async function () {
     ;[dev, author1] = await ethers.getSigners()
-    // ERC20 deployment
     SmartGuestBook = await ethers.getContractFactory('SmartGuestBook')
     smartGuestBook = await SmartGuestBook.connect(dev).deploy()
     await smartGuestBook.deployed()
   })
 
-  // DEPLOYMENT
   describe('Deployment', function () {
     it('Should set name & symbol', async function () {
       expect(await smartGuestBook.name(), 'name').to.equal(NAME)
