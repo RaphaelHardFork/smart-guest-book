@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 
@@ -45,7 +46,31 @@ describe('SmartGuestBook', function () {
     it('Should emit a CommentLeaved event', async function () {
       expect(commentCall)
         .to.emit(smartGuestBook, 'CommentLeaved')
-        .withArgs(author1.address, HASHED_COMMENT)
+        .withArgs(author1.address, HASHED_COMMENT, 1)
+    })
+  })
+
+  describe('Delete a comment', function () {
+    beforeEach(async function () {
+      await smartGuestBook.connect(author1).comment(HASHED_COMMENT, URI)
+    })
+
+    it('should revert if not the moderator call the function', async function () {
+      await expect(
+        smartGuestBook.connect(author1).deleteComment(1)
+      ).to.be.revertedWith('AccessControl:')
+    })
+
+    it('should delete the comment', async function () {
+      await smartGuestBook.connect(dev).deleteComment(1)
+      expect(await smartGuestBook.totalSupply()).to.equal(0)
+    })
+
+    it('should emit a CommentDeleted event', async function () {
+      const hashedComment = await smartGuestBook.dataOf(1)
+      expect(await smartGuestBook.connect(dev).deleteComment(1))
+        .to.emit(smartGuestBook, 'CommentDeleted')
+        .withArgs(dev.address, hashedComment.hashedComment, 1)
     })
   })
 })
