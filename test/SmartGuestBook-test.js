@@ -7,7 +7,7 @@ describe('SmartGuestBook', function () {
   const NAME = 'Comment'
   const SYMBOL = 'COM'
   const HASHED_COMMENT = ethers.utils.id('salut ton site est genial')
-  const URI = 'https://ipfs.io'
+  const CID = 'QmZg7MTxjfgV54H2ZHZreqEnSAbcxaepLGYAaWAN6Ershh'
 
   beforeEach(async function () {
     ;[dev, author1] = await ethers.getSigners()
@@ -28,7 +28,7 @@ describe('SmartGuestBook', function () {
     beforeEach(async function () {
       commentCall = await smartGuestBook
         .connect(author1)
-        .comment(HASHED_COMMENT, URI)
+        .comment(HASHED_COMMENT, CID)
     })
 
     it('Should increase the balance of the author', async function () {
@@ -39,20 +39,20 @@ describe('SmartGuestBook', function () {
       expect(await smartGuestBook.ownerOf(1)).to.equal(author1.address)
     })
 
-    it('should have the right URI', async function () {
-      expect(await smartGuestBook.tokenURI(1)).to.equal(URI)
+    it('should have the right CID', async function () {
+      expect(await smartGuestBook.tokenURI(1)).to.equal(CID)
     })
 
     it('Should emit a CommentLeaved event', async function () {
       expect(commentCall)
         .to.emit(smartGuestBook, 'CommentLeaved')
-        .withArgs(author1.address, HASHED_COMMENT, 1)
+        .withArgs(author1.address, HASHED_COMMENT, CID, 1)
     })
   })
 
   describe('Delete a comment', function () {
     beforeEach(async function () {
-      await smartGuestBook.connect(author1).comment(HASHED_COMMENT, URI)
+      await smartGuestBook.connect(author1).comment(HASHED_COMMENT, CID)
     })
 
     it('should revert if not the moderator call the function', async function () {
