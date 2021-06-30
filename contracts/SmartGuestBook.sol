@@ -115,6 +115,10 @@ contract SmartGuestBook is ERC721Enumerable, ERC721URIStorage, AccessControl {
         return true;
     }
 
+    function inSale(uint256 tokenId) public view returns (uint256) {
+        return _price[tokenId];
+    }
+
     function dataOf(uint256 commentId) public view returns (Comment memory) {
         return _comments[commentId];
     }
